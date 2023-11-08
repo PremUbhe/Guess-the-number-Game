@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 100%;
+            height: 778px;
+            background: linear-gradient(135deg, #153677, #4e085f);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .box {
+            width: 40%;
+            height: 70%;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 100px 50px;
+            display: flex;
+            justify-content: space-evenly;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        button {
+            width: 100px;
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: none;
+            outline: none;
+            background: greenyellow;
+            font-weight: 500;
+        }
+
+        input {
+            padding: 10px 20px;
+            border: none;
+            outline: none;
+            border-radius: 10px;
+        }
+
+        .display-1 {
+            display: flex;
+            height: 100%;
+
+            color: white;
+            flex-direction: column;
+            justify-content: space-evenly;
+            align-items: center;
+        }
+
+        .display-2 {
+            display: none;
+            height: 100%;
+            color: white;
+            flex-direction: column;
+            justify-content: space-evenly;
+            align-items: center;
+        }
+
+        .leader-bord {
+            display: flex;
+            height: 100%;
+            flex-direction: column;
+        }
+
+        .row {
+            display: flex;
+            color: white;
+            width: 100%;
+            justify-content: space-evenly;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="box">
+            <div class="display-1">
+                <h1>Game</h1>
+                <h2>Guess the number between 1 to 100</h2>
+                <input type="text" id="name" placeholder="Enter Your Name">
+                <button onclick="start()">Start</button>
+            </div>
+            <div class="display-2">
+                <h1>Game</h1>
+                <h2>Guess the number between 1 to 100</h2>
+                <h2 id="attempts">Attempts : 0</h2>
+                <input type="number" id="number" placeholder="Enter Your Number">
+                <h2 id="help"></h2>
+                <div class="row">
+                    <button onclick="check()">Check</button>
+                    <button onclick="reset()">Reset</button>
+                    <button onclick="leave()">Exit</button>
+                </div>
+            </div>
+        </div>
+        <div class="box">
+            <div class="row">
+                <h1>No.</h1>
+                <h1>Name</h1>
+                <h1>Score</h1>
+            </div>
+            <div class="leader-bord" id="leader-bord">
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var value = Math.floor(Math.random() * 100);
+        var table = document.getElementById('leader-bord');
+        var attempts = 0;
+
+        function start() {
+            var name = document.getElementById('name').value;
+            if (name == "") {
+                alert("Enter Name");
+            } else {
+                document.querySelector('.display-1').style.display = 'none';
+                document.querySelector('.display-2').style.display = 'flex';
+            }
+
+        }
+        function leave() {
+            document.querySelector('.display-1').style.display = 'flex';
+            document.querySelector('.display-2').style.display = 'none';
+
+        }
+
+        function check() {
+            var num = document.getElementById('number').value;
+            if (num == "") {
+                alert("Enter Number");
+            }
+            else {
+                attempts++;
+                document.getElementById('attempts').innerHTML = `Attempts : ${attempts}`;
+
+                if (num > value) {
+                    document.getElementById('help').innerHTML = `less the ${num}`;
+                    document.getElementById('help').style.color = 'yellow';
+                }
+                else if (num < value) {
+                    document.getElementById('help').innerHTML = `greater the ${num}`;
+                    document.getElementById('help').style.color = 'red';
+                }
+                else {
+                    document.getElementById('help').innerHTML = `You Won`;
+                    document.getElementById('help').style.color = 'green';
+                    document.getElementById('number').disabled = true;
+                    won();
+                }
+            }
+
+        }
+        function reset() {
+            value = Math.floor(Math.random() * 100);
+            attempts = 0;
+            document.getElementById('attempts').innerHTML = `Attempts : ${attempts}`;
+            document.getElementById('help').innerHTML = "";
+            document.getElementById('number').value = "";
+            document.getElementById('number').disabled = false;
+        }
+
+        function won() {
+            var name = document.getElementById('name').value;
+            var score = attempts;
+
+            var row = document.createElement('div');
+            row.className = 'row';
+
+            var no = document.createElement('h1');
+            no.innerHTML = table.childElementCount + 1;
+
+            var nameinput = document.createElement('h1');
+            nameinput.innerHTML = name;
+
+            var scoreinput = document.createElement('h1');
+            scoreinput.innerHTML = score;
+
+            row.appendChild(no);
+            row.appendChild(nameinput);
+            row.appendChild(scoreinput);
+            table.appendChild(row);
+            saveData();
+
+        }
+
+        function saveData() {
+            localStorage.setItem("data", table.innerHTML);
+        }
+
+        function loadData() {
+            if (localStorage.getItem("data")) {
+                table.innerHTML = localStorage.getItem("data");
+            }
+        }
+        loadData();
+    </script>
+</body>
+
+</html>
